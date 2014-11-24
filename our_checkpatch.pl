@@ -69,6 +69,7 @@ unless ( -e "spelling.txt") {
 }
 
 #finding first commit no longer needeed
+my @TAs = ();
 
 my $rev_list;
 my $rev_hash_f;
