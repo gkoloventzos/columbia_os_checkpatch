@@ -153,4 +153,7 @@ if ($last_line ne '') {
   print colored(['green'], "Everything clear\n");
 }
 
+#this should be with user argument
+unlink $diff_output;
+
 exit 0;
