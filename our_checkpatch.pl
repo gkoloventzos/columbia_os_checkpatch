@@ -93,14 +93,20 @@ foreach my $rev_hash (split /\n/, $rev_list) {
    }
 }
 
-if ($found) {
-  error_found("NO STARTING hash. Either you are in the correct year or not in OS course");
+unless ($found) {
+  my $message = <<'END_MESSAGE';
+  NO STARTING hash.
+  This means that either you have no commits.
+  Or you have not fill with the correct TAs email.
+END_MESSAGE
+  error_found($message);
 }
 print colored(['green'], "Commit found: $rev_hash_f\n");
 
 my $diff_output = "srcdiff";
 `git diff $rev_hash_f -- '*.c' '*.h' '*.S' > $diff_output`;
 if ( -z $diff_output) {
+  unlink $diff_output;
   exit 0;
 }
 my $checkpatch_output = `./checkpatch.pl --ignore FILE_PATH_CHANGES -terse --no-signoff -no-tree $diff_output`;
