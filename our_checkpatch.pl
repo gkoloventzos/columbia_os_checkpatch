@@ -25,10 +25,25 @@ sub checkpatch_error{
   print colored(['blue'], "At line: $line -- $_[3]");
 }
 
+sub print_help {
+  my $string = <<"MES";
+  our_checkpatch.pl
+  -h, --help           print this message
+  -c, --clean          removes the srcdiff file
+MES
+  print $string;
+  exit 0;
+}
+
 #if ($#ARGV == 0 and ($ARGV[0] =~ m/-h/ or $ARGV[0] !~ m/^[0-9a-f]{40}$/)) {
 #	print "Usage: ours_checkpatch.pl SHA\n";
 #	exit 0;
 #}
+GetOptions ("clean" => \$clean,
+            "help"  => \$help);
+
+print_help() if ($help);
+
 my $git = `which git 2>&1`;
 if ($? != 0) {
   error_found($git);
@@ -106,7 +121,7 @@ print colored(['green'], "Commit found: $rev_hash_f\n");
 my $diff_output = "srcdiff";
 `git diff $rev_hash_f -- '*.c' '*.h' '*.S' > $diff_output`;
 if ( -z $diff_output) {
-  unlink $diff_output;
+  unlink $diff_output if $clean;
   exit 0;
 }
 my $checkpatch_output = `./checkpatch.pl --ignore FILE_PATH_CHANGES -terse --no-signoff -no-tree $diff_output`;
@@ -160,6 +175,6 @@ if ($last_line ne '') {
 }
 
 #this should be with user argument
-unlink $diff_output;
+unlink $diff_output if $clean;
 
 exit 0;
