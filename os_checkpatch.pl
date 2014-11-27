@@ -60,7 +60,7 @@ unless ( -d "./.git" ) {
 	error_found("You should run this scipt in the top directory of the kernel");
 }
 
-unless ( -e "checkpatch.pl") {
+unless ( -e "~/utils/checkpatch.pl") {
   if ($wget_exit != 0) {
     error_found($wget);
   }
@@ -124,7 +124,7 @@ if ( -z $diff_output) {
   unlink $diff_output if $clean;
   exit 0;
 }
-my $checkpatch_output = `./checkpatch.pl --ignore FILE_PATH_CHANGES -terse --no-signoff -no-tree $diff_output`;
+my $checkpatch_output = `~/utils/checkpatch.pl --ignore FILE_PATH_CHANGES -terse --no-signoff -no-tree $diff_output`;
 
 
 #parsing checkpatch output
